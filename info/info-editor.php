@@ -5,6 +5,9 @@ if(isset($_GET["id"])){
 }else{
     $id=0;
 }
+$sql="SELECT * FROM information WHERE id='$id'";
+$result = $conn->query($sql);
+$count = $result->num_rows;
 ?>
 
 <!doctype html>
@@ -32,11 +35,15 @@ if(isset($_GET["id"])){
             <?php require_once("../public/nav.php") ?>
         </aside>
         <div class="col-lg-9 button-group d-flex align-items-center shadow-sm">
-
-            <a role="button" class="btn btn-primary" href="info-list.php">返回</a>
+            <?php if($count===0): ?>
+                使用者不存在
+            <?php else:
+            $row=$result->fetch_assoc();
+            ?>
+            <a class="btn btn-primary" href="info-list.php">返回</a>
             <button class="btn btn-primary m-4" type="submit">發布</button>
             <button class="btn btn-primary ">預覽</button>
-            <button class="btn btn-danger m-4">刪除</button>
+            <a href="infoDelete.php?id=<?=$row["id"]?>" class="btn btn-danger">刪除</a>
         </div>
         <div class="col-lg-9  article py-3">
             <div class="d-flex align-items-center  justify-content-center">
@@ -46,11 +53,12 @@ if(isset($_GET["id"])){
         </div>
         <div class="col-lg-9 article py-3">
             <label class="form-label">標題</label>
-            <input type="text" class="form-control mb-3">
+            <input type="text" class="form-control mb-3" value="<?=$row["title"]?>">
             <label for="exampleFormControlTextarea1" class="form-label">內容</label>
-            <textarea class="form-control" id="exampleFormControlTextarea1" rows="20"></textarea>
+            <textarea class="form-control" id="exampleFormControlTextarea1"rows="20">
+                <?=$row["content"]?></textarea>
         </div>
-
+        <?php endif;?>
 
     </div>
 </div>

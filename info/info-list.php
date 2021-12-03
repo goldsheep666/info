@@ -21,6 +21,9 @@ $count = $result->num_rows;
             background: #fff;
             padding-top:20px ;
         }
+        .form-control-sm{
+            width:60%;
+        }
     </style>
 
 </head>
@@ -40,6 +43,8 @@ $count = $result->num_rows;
         <div class=" col-lg-9 button-group shadow-sm d-flex align-items-center">
             <a href="info-create.php" class="btn btn-primary" role="button">新增</a>
             <button class="btn btn-danger m-4">刪除</button>
+            <input type="number" class="form-control form-control-sm">
+            <button class="btn btn-primary m-4">搜尋</button>
         </div>
         <div class="col-lg-9 section">
             <table class="table table-bordered ">
@@ -76,8 +81,8 @@ $count = $result->num_rows;
                     </td>
                     <td><?=$row["time"]?></td>
                     <td>
-                        <a href="info-editor.php" class="btn btn-primary" role="button" style="margin-bottom: 1px;">修改</a>
-                        <a href="infoDoDelete.php" class="btn btn-danger" role="button">刪除</a>
+                        <a href="info-editor.php?id=<?= $row["id"] ?>" class="btn btn-primary" style="margin-bottom: 1px;">修改</a>
+                        <a href="infoDelete.php" class="btn btn-danger" role="button">刪除</a>
                     </td>
                 </tr>
                 <?php endwhile; ?>
