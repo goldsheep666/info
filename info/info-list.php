@@ -1,9 +1,58 @@
 <?php
-require_once ("../db-connect.php");
-$sql="SELECT * FROM information WHERE valid=1";
-$result = $conn->query($sql);
-//$row = $result->fetch_assoc();
-$count = $result->num_rows;
+
+require_once ("../method/pdo-connect.php");
+$sql="SELECT * FROM information WHERE valid=1 ";
+$stmt = $db_host->prepare($sql);
+$count = $stmt->rowCount();
+
+try {
+    $stmt->execute();
+    $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage() ;
+}
+
+
+$stmtFind = $db_host->prepare($sql);
+$stmtFind->execute();
+$rowFind = $stmtFind->fetchAll(PDO::FETCH_ASSOC);
+$countFind = $stmtFind->rowCount();
+
+if(isset($_GET["p"])){
+    $pageNum=$_GET["p"];//第幾頁
+}else {
+    $pageNum = 1;
+}
+
+$perPageCount=2;//每頁10筆
+$startRow=($pageNum-1) * $perPageCount;
+$page=$count / $perPageCount;//總頁數
+$pRemainder=$count % $perPageCount;
+$perPageStart=($pageNum-1) * $perPageCount + 1;
+$perPageEnd=$pageNum * $perPageCount ;
+
+if($pRemainder!==0){
+    $page=ceil($page);
+    if ($pageNum == $page) {
+        $perPageEnd = ($pageNum-1) * $perPageCount + $pRemainder;
+    }
+}else{
+    $page=$count / $perPageCount;
+}
+
+$sql2 = "SELECT * FROM information WHERE valid=1 ORDER BY id LIMIT $startRow, $perPageCount";
+
+if (isset($_GET["find"])){
+    $find=$_GET["find"];
+    $sql="SELECT * FROM information WHERE content LIKE '%$find%'";
+}else{
+    $sql="SELECT * FROM information WHERE valid=1 ORDER BY id LIMIT 10";
+}
+
+$stmt = $db_host->prepare($sql);
+$stmt->execute();
+$count2 = $stmt->rowCount();
 
 ?>
 
@@ -41,13 +90,26 @@ $count = $result->num_rows;
         </aside>
 
         <div class=" col-lg-9 button-group shadow-sm d-flex align-items-center">
-            <a href="info-create.php" class="btn btn-primary" role="button">新增</a>
-            <button class="btn btn-danger m-4">刪除</button>
-            <input type="number" class="form-control form-control-sm">
-            <button class="btn btn-primary m-4">搜尋</button>
+            <a href="info-list.php" class="btn btn-primary text-nowrap me-4">資料列表</a>
+            <a href="info-create.php" class="btn btn-primary text-nowrap">新增</a>
+            <a class="btn btn-danger m-4 text-nowrap">刪除</a>
+            <form action="info-list.php" method="get" class="d-flex">
+                <input type="search" class="form-control form-control-sm me-4" name="find"
+                       value="<?php if(isset($search))echo $search; ?>" placeholder="內容搜尋">
+                <button class="btn btn-primary text-nowrap"type="submit" >搜尋</button>
+            </form>
         </div>
         <div class="col-lg-9 section">
-            <table class="table table-bordered ">
+            <?php if (isset($pageNum)): ?>
+                <div>
+                    第 <?=$perPageStart?> ~ <?=$perPageEnd?> 筆, 總共 <?= $count ?> 筆資料
+                </div>
+            <?php else: ?>
+                <div>
+                    共 <?= $count ?> 筆資料
+                </div>
+            <?php endif; ?>
+            <table class="table table-bordered">
                 <thead>
                 <tr>
                     <th>選取</th>
@@ -60,39 +122,53 @@ $count = $result->num_rows;
                 </tr>
                 </thead>
                 <tbody>
-                <?php if ($count > 0):
-                while ($row=$result->fetch_assoc()):
-                ?>
+                <?php foreach ($row as $key => $value):?>
+
                 <tr>
                     <td><input type="checkbox"></td>
-                    <td><?=$row["id"]?></td>
+                    <td><?=$value["id"]?></td>
                     <td>
-                        <?=$row["category"]?>
+                        <?=$value["category"]?>
                     </td>
                     <td>
-                        <span class="d-inline-block text-truncate" style="max-width: 85px;">
-                            <?=$row["title"]?>
+                        <span class="d-inline-block text-truncate" title="<?=$value["title"]?>"  style="max-width: 85px;">
+                            <?=$value["title"]?>
                         </span>
                     </td>
                     <td>
-                        <span class="d-inline-block text-truncate" style="max-width: 550px;">
-                            <?=$row["content"]?>
+                        <span class="d-inline-block text-truncate" title="<?=$value["content"]?>" style="max-width: 480px;">
+                            <?=$value["content"]?>
                           </span>
                     </td>
-                    <td><?=$row["time"]?></td>
+                    <td><?=$value["time"]?></td>
+
                     <td>
-                        <a href="info-editor.php?id=<?= $row["id"] ?>" class="btn btn-primary" style="margin-bottom: 1px;">修改</a>
-                        <a href="infoDelete.php" class="btn btn-danger" role="button">刪除</a>
+                        <a href="info-read.php?id=<?= $value["id"] ?>" class="btn btn-primary text-nowrap">檢視</a>
+                        <a href="info-editor.php?id=<?= $value["id"] ?>" class="btn btn-primary text-nowrap">修改</a>
+                        <a href="infoDelete.php?id=<?= $value["id"] ?>" class="btn btn-danger text-nowrap" role="button">刪除</a>
                     </td>
                 </tr>
-                <?php endwhile; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="5">沒有資料</td>
-                    </tr>
-                <?php endif; ?>
+                <?php endforeach; ?>
+
+<!--                    <tr>-->
+<!--                        <td colspan="7">沒有資料</td>-->
+<!--                    </tr>-->
+
                 </tbody>
             </table>
+            <?php if(isset($pageNum)): ?>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item"><a class="page-link" href="info-list.php?p=1">第一頁</a></li>
+                    <?php for($i=1;$i<=$page;$i++): ?>
+                    <li class="page-item <?php if($pageNum==$i)echo "active" ?>">
+                        <a class="page-link" href="info-list.php?p=<?=$i?>"><?=$i?></a>
+                    </li>
+                    <?php endfor; ?>
+                    <li class="page-item"><a class="page-link" href="info-list.php?p=<?=$page?>">最末頁</a></li>
+                </ul>
+            </nav>
+            <?php endif; ?>
         </div><!--col-9-->
     </div>
 </div><!--container-->
