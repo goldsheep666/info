@@ -10,6 +10,8 @@ $result=$conn->query($sql);
 
 if ($conn->query($sql) === TRUE) {
 //    echo "修改資料完成<br>";
+
+//    header("location: info-editor.php?id=$id");
     header("location: info-list.php");
 } else {
     echo "修改資料錯誤: " . $conn->error;

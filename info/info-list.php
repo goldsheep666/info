@@ -3,21 +3,25 @@
 require_once ("../method/pdo-connect.php");
 $sql="SELECT * FROM information WHERE valid=1 ";
 $stmt = $db_host->prepare($sql);
-$count = $stmt->rowCount();
 
 try {
     $stmt->execute();
     $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+    $count = $stmt->rowCount();
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage() ;
 }
 
-
-$stmtFind = $db_host->prepare($sql);
-$stmtFind->execute();
-$rowFind = $stmtFind->fetchAll(PDO::FETCH_ASSOC);
-$countFind = $stmtFind->rowCount();
+if (isset($_GET["find"])){
+    $find=$_GET["find"];
+    $sql="SELECT * FROM information WHERE content LIKE '%$find%'";
+}else{
+    $sql="SELECT * FROM information WHERE valid=1 ORDER BY id LIMIT 10";
+}
+//$stmtFind = $db_host->prepare($sqlFind);
+//$stmtFind->execute();
+//$rowFind = $stmtFind->fetchAll(PDO::FETCH_ASSOC);
+//$countFind = $stmtFind->rowCount();
 
 if(isset($_GET["p"])){
     $pageNum=$_GET["p"];//第幾頁
@@ -41,18 +45,19 @@ if($pRemainder!==0){
     $page=$count / $perPageCount;
 }
 
-$sql2 = "SELECT * FROM information WHERE valid=1 ORDER BY id LIMIT $startRow, $perPageCount";
+$sql = "SELECT * FROM information WHERE valid=1 ORDER BY id LIMIT $startRow, $perPageCount";
+$stmt = $db_host->prepare($sql);
 
-if (isset($_GET["find"])){
-    $find=$_GET["find"];
-    $sql="SELECT * FROM information WHERE content LIKE '%$find%'";
-}else{
-    $sql="SELECT * FROM information WHERE valid=1 ORDER BY id LIMIT 10";
+try {
+    $stmt->execute();
+    $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $count = $stmt->rowCount();
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage() ;
 }
 
-$stmt = $db_host->prepare($sql);
-$stmt->execute();
-$count2 = $stmt->rowCount();
+
+
 
 ?>
 
@@ -95,12 +100,13 @@ $count2 = $stmt->rowCount();
             <a class="btn btn-danger m-4 text-nowrap">刪除</a>
             <form action="info-list.php" method="get" class="d-flex">
                 <input type="search" class="form-control form-control-sm me-4" name="find"
-                       value="<?php if(isset($search))echo $search; ?>" placeholder="內容搜尋">
+                       value="<?php if(isset($find))echo $find; ?>" placeholder="內容搜尋">
                 <button class="btn btn-primary text-nowrap"type="submit" >搜尋</button>
             </form>
         </div>
         <div class="col-lg-9 section">
-            <?php if (isset($pageNum)): ?>
+            <?php if (isset($pageNum)):?>
+
                 <div>
                     第 <?=$perPageStart?> ~ <?=$perPageEnd?> 筆, 總共 <?= $count ?> 筆資料
                 </div>
@@ -108,7 +114,9 @@ $count2 = $stmt->rowCount();
                 <div>
                     共 <?= $count ?> 筆資料
                 </div>
+
             <?php endif; ?>
+
             <table class="table table-bordered">
                 <thead>
                 <tr>
@@ -122,7 +130,8 @@ $count2 = $stmt->rowCount();
                 </tr>
                 </thead>
                 <tbody>
-                <?php foreach ($row as $key => $value):?>
+                <?php if ($count > 0):
+                foreach ($row as $key => $value):?>
 
                 <tr>
                     <td><input type="checkbox"></td>
@@ -148,12 +157,12 @@ $count2 = $stmt->rowCount();
                         <a href="infoDelete.php?id=<?= $value["id"] ?>" class="btn btn-danger text-nowrap" role="button">刪除</a>
                     </td>
                 </tr>
-                <?php endforeach; ?>
-
-<!--                    <tr>-->
-<!--                        <td colspan="7">沒有資料</td>-->
-<!--                    </tr>-->
-
+                <?php endforeach;
+                else:?>
+                    <tr>
+                        <td colspan="7">沒有資料</td>
+                    </tr>
+                <?php endif; ?>
                 </tbody>
             </table>
             <?php if(isset($pageNum)): ?>
