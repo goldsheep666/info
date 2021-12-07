@@ -51,7 +51,7 @@ $stmt = $db_host->prepare($sql);
 try {
     $stmt->execute();
     $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $count = $stmt->rowCount();
+    $count2 = $stmt->rowCount();
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage() ;
 }
