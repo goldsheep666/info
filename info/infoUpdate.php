@@ -3,18 +3,18 @@ $id=$_POST["id"];
 $category=$_POST["category"];
 $title=$_POST["title"];
 $content=$_POST["content"];
+$now=date("Y-m-d H:i:s");
 
-require_once ("../method/db-connect.php");
-$sql="UPDATE information SET category='$category' ,title='$title', content='$content'WHERE id='$id'";
-$result=$conn->query($sql);
+require_once ("../method/pdo-connect.php");
+$sql="UPDATE information SET category=? ,title=?, content=?, time=? WHERE id=?";
 
-if ($conn->query($sql) === TRUE) {
-//    echo "修改資料完成<br>";
-
-//    header("location: info-editor.php?id=$id");
-    header("location: info-list.php");
-} else {
-    echo "修改資料錯誤: " . $conn->error;
+$stmt = $db_host->prepare($sql);
+try {
+    $stmt->execute([$category,$title,$content,$now,$id]);
+    $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    header("location:info-list.php");
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage() . "<br/>";
+    exit;
 }
-$conn->close();
 ?>

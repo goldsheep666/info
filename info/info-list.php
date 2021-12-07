@@ -96,8 +96,8 @@ try {
 
         <div class=" col-lg-9 button-group shadow-sm d-flex align-items-center">
             <a href="info-list.php" class="btn btn-primary text-nowrap me-4">資料列表</a>
-            <a href="info-create.php" class="btn btn-primary text-nowrap">新增</a>
-            <a class="btn btn-danger m-4 text-nowrap">刪除</a>
+            <a href="info-create.php" class="btn btn-primary text-nowrap me-4">新增</a>
+<!--            <a class="btn btn-danger m-4 text-nowrap">刪除</a>-->
             <form action="info-list.php" method="get" class="d-flex">
                 <input type="search" class="form-control form-control-sm me-4" name="find"
                        value="<?php if(isset($find))echo $find; ?>" placeholder="內容搜尋">
@@ -120,7 +120,7 @@ try {
             <table class="table table-bordered">
                 <thead>
                 <tr>
-                    <th>選取</th>
+<!--                    <th>選取</th>-->
                     <th>id</th>
                     <th>類別</th>
                     <th>標題</th>
@@ -134,7 +134,7 @@ try {
                 foreach ($row as $key => $value):?>
 
                 <tr>
-                    <td><input type="checkbox"></td>
+<!--                    <td><input type="checkbox"></td>-->
                     <td><?=$value["id"]?></td>
                     <td>
                         <?=$value["category"]?>

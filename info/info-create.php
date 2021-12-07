@@ -24,10 +24,10 @@
         </aside>
 
         <form action="infoInsert.php" method="post">
-            <div class="col-lg-9 button-group d-flex align-items-center shadow-sm">
+            <div class="col-lg-9 button-group d-flex align-items-center shadow-sm px-3">
 
                 <a class="btn btn-primary" href="info-list.php">返回</a>
-                <button class="btn btn-primary m-4" type="submit">發布</button>
+                <button class="btn btn-primary m-4" type="submit">儲存</button>
                 <button class="btn btn-primary ">預覽</button>
                 <button class="btn btn-danger m-4">刪除</button>
             </div>
@@ -46,8 +46,6 @@
                 <input type="text" class="form-control mb-3" name="title" name="title">
                 <label for="exampleFormControlTextarea1" class="form-label">內容</label>
                 <textarea class="form-control" id="exampleFormControlTextarea1" name="content" rows="20"></textarea>
-                <br>
-                <button class="btn btn-primary" type="submit">儲存</button>
 
             </div>
 
