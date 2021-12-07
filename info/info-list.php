@@ -1,5 +1,4 @@
 <?php
-
 require_once ("../method/pdo-connect.php");
 $sql="SELECT * FROM information WHERE valid=1 ";
 $stmt = $db_host->prepare($sql);
@@ -9,20 +8,10 @@ try {
     $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $count = $stmt->rowCount();
 } catch (PDOException $e) {
-    echo "Error: " . $e->getMessage() ;
+    echo  $e->getMessage() ;
 }
 
-if (isset($_GET["find"])){
-    $find=$_GET["find"];
-    $sql="SELECT * FROM information WHERE content LIKE '%$find%'";
-}else{
-    $sql="SELECT * FROM information WHERE valid=1 ORDER BY id LIMIT 10";
-}
-//$stmtFind = $db_host->prepare($sqlFind);
-//$stmtFind->execute();
-//$rowFind = $stmtFind->fetchAll(PDO::FETCH_ASSOC);
-//$countFind = $stmtFind->rowCount();
-
+//分頁
 if(isset($_GET["p"])){
     $pageNum=$_GET["p"];//第幾頁
 }else {
@@ -45,17 +34,44 @@ if($pRemainder!==0){
     $page=$count / $perPageCount;
 }
 
-$sql = "SELECT * FROM information WHERE valid=1 ORDER BY id LIMIT $startRow, $perPageCount";
-$stmt = $db_host->prepare($sql);
-
-try {
-    $stmt->execute();
-    $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $count2 = $stmt->rowCount();
-} catch (PDOException $e) {
-    echo "Error: " . $e->getMessage() ;
+//搜尋
+if (isset($_GET["find"])){
+    $find=$_GET["find"];
+    $sqlFind="SELECT * FROM information WHERE content LIKE ? AND valid=1 ORDER BY id LIMIT $startRow, $perPageCount";
+    $stmtFind = $db_host->prepare($sqlFind);
+    try {
+        $stmtFind->execute(["%$find%"]);
+        $rowFind = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        echo $e->getMessage() ;
+    }
+}else{
+    $find="";
+    $sql = "SELECT * FROM information WHERE valid=1 ORDER BY id LIMIT $startRow, $perPageCount";
+    $stmt = $db_host->prepare($sql);
+    try {
+        $stmt->execute();
+        $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $count2 = $stmt->rowCount();
+    } catch (PDOException $e) {
+        echo $e->getMessage() ;
+    }
 }
 
+
+//if (isset($_GET["find"])){
+//    $find=$_GET["find"];
+//    $sqlFind="SELECT * FROM information WHERE content LIKE ? AND valid=1 ORDER BY id LIMIT $startRow, $perPageCount";
+//    $stmtFind = $db_host->prepare($sqlFind);
+//    try {
+//        $stmtFind->execute(["%$find%"]);
+//        $rowFind = $stmt->fetchAll(PDO::FETCH_ASSOC);
+//    } catch (PDOException $e) {
+//        echo $e->getMessage() ;
+//    }
+//}else {
+//    $find = "";
+//}
 
 
 
@@ -95,7 +111,7 @@ try {
         </aside>
 
         <div class=" col-lg-9 button-group shadow-sm d-flex align-items-center">
-            <a href="info-list.php" class="btn btn-primary text-nowrap me-4">資料列表</a>
+            <a href="info-list.php?p=1" class="btn btn-primary text-nowrap me-4">資料列表</a>
             <a href="info-create.php" class="btn btn-primary text-nowrap me-4">新增</a>
 <!--            <a class="btn btn-danger m-4 text-nowrap">刪除</a>-->
             <form action="info-list.php" method="get" class="d-flex">
@@ -160,7 +176,7 @@ try {
                 <?php endforeach;
                 else:?>
                     <tr>
-                        <td colspan="7">沒有資料</td>
+                        <td colspan="6">沒有資料</td>
                     </tr>
                 <?php endif; ?>
                 </tbody>
