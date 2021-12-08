@@ -12,9 +12,9 @@ $stmt = $db_host->prepare($sql);
 try {
     $stmt->execute([$category,$title,$content,$now,$id]);
     $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    header("location:info-list.php");
+    header("location:info-editor.php?id=$id");
 } catch (PDOException $e) {
-    echo "Error: " . $e->getMessage() . "<br/>";
+    echo "Error: " . $e->getMessage() ;
     exit;
 }
 ?>

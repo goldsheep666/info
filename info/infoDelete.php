@@ -8,7 +8,7 @@ try {
     $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
     header("location:info-list.php");
 } catch (PDOException $e) {
-    echo "Error: " . $e->getMessage() . "<br/>";
+    echo "Error: " . $e->getMessage() ;
     exit;
 }
 ?>

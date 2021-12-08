@@ -1,6 +1,6 @@
 <?php
-require_once ("../method/pdo-connect.php");
-$sql="SELECT * FROM information WHERE valid=1 ";
+require_once("../method/pdo-connect.php");
+$sql = "SELECT * FROM information WHERE valid=1 ";
 $stmt = $db_host->prepare($sql);
 
 try {
@@ -8,70 +8,54 @@ try {
     $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $count = $stmt->rowCount();
 } catch (PDOException $e) {
-    echo  $e->getMessage() ;
-}
-
-//分頁
-if(isset($_GET["p"])){
-    $pageNum=$_GET["p"];//第幾頁
-}else {
-    $pageNum = 1;
-}
-
-$perPageCount=2;//每頁10筆
-$startRow=($pageNum-1) * $perPageCount;
-$page=$count / $perPageCount;//總頁數
-$pRemainder=$count % $perPageCount;
-$perPageStart=($pageNum-1) * $perPageCount + 1;
-$perPageEnd=$pageNum * $perPageCount ;
-
-if($pRemainder!==0){
-    $page=ceil($page);
-    if ($pageNum == $page) {
-        $perPageEnd = ($pageNum-1) * $perPageCount + $pRemainder;
-    }
-}else{
-    $page=$count / $perPageCount;
+    echo $e->getMessage();
 }
 
 //搜尋
-if (isset($_GET["find"])){
-    $find=$_GET["find"];
-    $sqlFind="SELECT * FROM information WHERE content LIKE ? AND valid=1 ORDER BY id LIMIT $startRow, $perPageCount";
-    $stmtFind = $db_host->prepare($sqlFind);
+if (isset($_GET["find"])) {
+    $find = $_GET["find"];
+    $sql = "SELECT * FROM information WHERE content LIKE ? AND valid=1 ORDER BY id ";
+    $stmt = $db_host->prepare($sql);
     try {
-        $stmtFind->execute(["%$find%"]);
-        $rowFind = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->execute(["%$find%"]);
+        $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $count = $stmt->rowCount();
     } catch (PDOException $e) {
-        echo $e->getMessage() ;
+        echo $e->getMessage();
     }
-}else{
-    $find="";
+} else {
+    $find = "";
+    //分頁
+    if (isset($_GET["p"])) {
+        $pageNum = $_GET["p"];//第幾頁
+    } else {
+        $pageNum = 1;
+    }
+    $perPageCount = 3;//每頁10筆
+    $startRow = ($pageNum - 1) * $perPageCount;
+    $page = $count / $perPageCount;//總頁數
+    $pRemainder = $count % $perPageCount;
+    $perPageStart = ($pageNum - 1) * $perPageCount + 1;
+    $perPageEnd = $pageNum * $perPageCount;
+
+    if ($pRemainder !== 0) {
+        $page = ceil($page);
+        if ($pageNum == $page) {
+            $perPageEnd = ($pageNum - 1) * $perPageCount + $pRemainder;
+        }
+    } else {
+        $page = $count / $perPageCount;
+    }
     $sql = "SELECT * FROM information WHERE valid=1 ORDER BY id LIMIT $startRow, $perPageCount";
     $stmt = $db_host->prepare($sql);
     try {
         $stmt->execute();
         $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $count2 = $stmt->rowCount();
     } catch (PDOException $e) {
-        echo $e->getMessage() ;
+        echo $e->getMessage();
     }
 }
 
-
-//if (isset($_GET["find"])){
-//    $find=$_GET["find"];
-//    $sqlFind="SELECT * FROM information WHERE content LIKE ? AND valid=1 ORDER BY id LIMIT $startRow, $perPageCount";
-//    $stmtFind = $db_host->prepare($sqlFind);
-//    try {
-//        $stmtFind->execute(["%$find%"]);
-//        $rowFind = $stmt->fetchAll(PDO::FETCH_ASSOC);
-//    } catch (PDOException $e) {
-//        echo $e->getMessage() ;
-//    }
-//}else {
-//    $find = "";
-//}
 
 
 
@@ -89,10 +73,11 @@ if (isset($_GET["find"])){
         .section {
             margin: 20px 0px 0px 300px;
             background: #fff;
-            padding-top:20px ;
+            padding-top: 20px;
         }
-        .form-control-sm{
-            width:60%;
+
+        .form-control-sm {
+            width: 60%;
         }
     </style>
 
@@ -110,21 +95,24 @@ if (isset($_GET["find"])){
             <?php require_once("../public/nav.php") ?>
         </aside>
 
-        <div class=" col-lg-9 button-group shadow-sm d-flex align-items-center">
-            <a href="info-list.php?p=1" class="btn btn-primary text-nowrap me-4">資料列表</a>
-            <a href="info-create.php" class="btn btn-primary text-nowrap me-4">新增</a>
-<!--            <a class="btn btn-danger m-4 text-nowrap">刪除</a>-->
-            <form action="info-list.php" method="get" class="d-flex">
-                <input type="search" class="form-control form-control-sm me-4" name="find"
-                       value="<?php if(isset($find))echo $find; ?>" placeholder="內容搜尋">
-                <button class="btn btn-primary text-nowrap"type="submit" >搜尋</button>
-            </form>
+        <div class=" col-lg-9 button-group shadow-sm d-flex justify-content-between">
+            <div class="d-flex align-items-center">
+                <a href="info-list.php?p=1" class="btn btn-primary text-nowrap me-4">資料列表</a>
+                <a href="info-create.php" class="btn btn-primary text-nowrap me-4">新增</a>
+            </div>
+            <div class="d-flex align-items-center">
+               <form action="info-list.php" method="get" class="d-flex">
+<!--                    <input type="hidden" name="p" value="--><?//=$pageNum?><!--">-->
+                    <input type="search" class="form-control form-control-sm me-4" name="find"
+                           value="<?php if (isset($find)) echo $find; ?>" placeholder="內容搜尋">
+                    <button class="btn btn-primary text-nowrap" type="submit">搜尋</button>
+                </form>
+            </div>
         </div>
         <div class="col-lg-9 section">
-            <?php if (isset($pageNum)):?>
-
+            <?php if (isset($pageNum)) : ?>
                 <div>
-                    第 <?=$perPageStart?> ~ <?=$perPageEnd?> 筆, 總共 <?= $count ?> 筆資料
+                    第 <?= $perPageStart ?> ~ <?= $perPageEnd ?> 筆, 總共 <?= $count ?> 筆資料
                 </div>
             <?php else: ?>
                 <div>
@@ -136,7 +124,7 @@ if (isset($_GET["find"])){
             <table class="table table-bordered">
                 <thead>
                 <tr>
-<!--                    <th>選取</th>-->
+                    <th>檢視</th>
                     <th>id</th>
                     <th>類別</th>
                     <th>標題</th>
@@ -147,56 +135,72 @@ if (isset($_GET["find"])){
                 </thead>
                 <tbody>
                 <?php if ($count > 0):
-                foreach ($row as $key => $value):?>
+                    foreach ($row as $key => $value):?>
 
-                <tr>
-<!--                    <td><input type="checkbox"></td>-->
-                    <td><?=$value["id"]?></td>
-                    <td>
-                        <?=$value["category"]?>
-                    </td>
-                    <td>
-                        <span class="d-inline-block text-truncate" title="<?=$value["title"]?>"  style="max-width: 85px;">
-                            <?=$value["title"]?>
+                        <tr>
+                            <td><a href="info-read.php?id=<?= $value["id"] ?>">
+                                    <i class="fas fa-search"></i></a></td>
+                            <td><?= $value["id"] ?></td>
+                            <td>
+                                <?= $value["category"] ?>
+                            </td>
+                            <td>
+                        <span class="d-inline-block text-truncate" title="<?= $value["title"] ?>"
+                              style="max-width: 85px;">
+                            <?= $value["title"] ?>
                         </span>
-                    </td>
-                    <td>
-                        <span class="d-inline-block text-truncate" title="<?=$value["content"]?>" style="max-width: 480px;">
-                            <?=$value["content"]?>
+                            </td>
+                            <td>
+                        <span class="d-inline-block text-truncate" title="<?= $value["content"] ?>"
+                              style="max-width: 480px;">
+                            <?= $value["content"] ?>
                           </span>
-                    </td>
-                    <td><?=$value["time"]?></td>
+                            </td>
+                            <td><?= $value["time"] ?></td>
 
-                    <td>
-                        <a href="info-read.php?id=<?= $value["id"] ?>" class="btn btn-primary text-nowrap">檢視</a>
-                        <a href="info-editor.php?id=<?= $value["id"] ?>" class="btn btn-primary text-nowrap">修改</a>
-                        <a href="infoDelete.php?id=<?= $value["id"] ?>" class="btn btn-danger text-nowrap" role="button">刪除</a>
-                    </td>
-                </tr>
-                <?php endforeach;
+                            <td>
+
+                                <a href="info-editor.php?id=<?= $value["id"] ?>">
+                                   <i class="fas fa-edit"></i></a>
+                                <a href="infoDelete.php?id=<?= $value["id"] ?>" onclick="javascript:return del();">
+                                   <i class="fas fa-trash-alt"></i></a>
+                            </td>
+                        </tr>
+                    <?php endforeach;
                 else:?>
                     <tr>
-                        <td colspan="6">沒有資料</td>
+                        <td colspan="7">沒有資料</td>
                     </tr>
                 <?php endif; ?>
                 </tbody>
             </table>
-            <?php if(isset($pageNum)): ?>
-            <nav aria-label="Page navigation example">
-                <ul class="pagination">
-                    <li class="page-item"><a class="page-link" href="info-list.php?p=1">第一頁</a></li>
-                    <?php for($i=1;$i<=$page;$i++): ?>
-                    <li class="page-item <?php if($pageNum==$i)echo "active" ?>">
-                        <a class="page-link" href="info-list.php?p=<?=$i?>"><?=$i?></a>
-                    </li>
-                    <?php endfor; ?>
-                    <li class="page-item"><a class="page-link" href="info-list.php?p=<?=$page?>">最末頁</a></li>
-                </ul>
-            </nav>
+            <?php if (isset($pageNum)):?>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item"><a class="page-link" href="info-list.php?p=1">第一頁</a></li>
+                        <?php for ($i = 1; $i <= $page; $i++): ?>
+                            <li class="page-item <?php if ($pageNum == $i) echo "active" ?>">
+                                <a class="page-link" href="info-list.php?p=<?= $i ?>"><?= $i ?></a>
+                            </li>
+                        <?php endfor; ?>
+                        <li class="page-item"><a class="page-link" href="info-list.php?p=<?= $page ?>">最末頁</a></li>
+                    </ul>
+                </nav>
             <?php endif; ?>
         </div><!--col-9-->
     </div>
 </div><!--container-->
+<script>
+    function del() {
+        var msg = "確定要刪除嗎？\n\n請確認！";
+        if (confirm(msg) == true) {
+            window.location.replace("infoDelete.php?id=<?= $value["id"] ?>");
+            return true;
+        } else {
+            return false;
+        }
+    }
+</script>
 
 
 </body>

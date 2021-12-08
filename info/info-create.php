@@ -45,7 +45,7 @@
                 <label class="form-label">標題</label>
                 <input type="text" class="form-control mb-3" name="title" name="title">
                 <label for="exampleFormControlTextarea1" class="form-label">內容</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" name="content" rows="20"></textarea>
+                <textarea class="form-control" name="content" rows="20"></textarea>
 
             </div>
 
