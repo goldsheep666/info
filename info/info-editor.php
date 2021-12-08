@@ -30,6 +30,9 @@ try {
         .form-control-sm {
             width: 70%;
         }
+        .badge:hover{
+
+        }
     </style>
 
 </head>
@@ -56,7 +59,7 @@ try {
                 <div class="col-lg-9  article py-3">
                     <div class="d-flex align-items-center  justify-content-center">
                         <input type="file" class="form-control form-control-sm" >
-                        <!--                    <button class="btn btn-primary m-2" type="submit">上傳</button>-->
+                                            <button class="btn btn-primary m-2" type="submit">上傳</button>
                     </div>
                 </div>
                 <div class="col-lg-9 article p-3">
@@ -68,8 +71,14 @@ try {
                     <label class="form-label">標題</label>
                     <input type="text" class="form-control mb-3"name="title" value="<?= $value["title"] ?>">
 
-
+<div class="d-flex justify-content-between">
                     <label class="form-label">內容</label>
+                    <div class="d-flex align-items-center">
+                        <a role="button" class="badge bg-warning jq-large text-dark me-2"style="text-decoration:none">大</a>
+                        <a role="button" class="badge bg-warning jq-medium text-dark me-2" style="text-decoration:none">中</a>
+                        <a role="button" class="badge bg-warning jq-small text-dark me-2" style="text-decoration:none">小</a>
+                    </div>
+                </div>
                     <textarea class="form-control" name="content" rows="20"><?=$value["content"] ?></textarea>
                 </div>
             </form>
@@ -77,6 +86,7 @@ try {
         <?php endif; ?>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script>
     function del() {
         var msg = "確定要刪除嗎？\n\n請確認！";
@@ -87,6 +97,24 @@ try {
             return false;
         }
     }
+    //文字大小更改
+    $(".jq-large").on("click", function (e) {
+        event.preventDefault(); //取消預設行為
+        $("textarea").css("font-size", "24px");
+
+    });
+
+    $(".jq-medium").on("click", function (e) {
+        event.preventDefault(); //取消預設行為
+        $("textarea").css("font-size", "18px");
+
+    });
+
+    $(".jq-small").on("click", function (e) {
+        event.preventDefault(); //取消預設行為
+        $("textarea").css("font-size", "12px");
+
+    });
 </script>
 
 </body>

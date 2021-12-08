@@ -35,49 +35,49 @@ try {
         </aside>
 
         <form action="infoInsert.php" method="post">
+            <?php if ($infoCount > 0):
+            foreach ($row as $key => $value): ?>
             <div class="col-lg-9 button-group d-flex align-items-center shadow-sm px-3">
 
-                    <a class="btn btn-primary" href="info-list.php">返回</a>
-                    <button class="btn btn-danger m-4" onclick="javascript:return del();">刪除</button>
-                </div>
+                <a class="btn btn-primary me-4" href="info-list.php">返回</a>
+                <a href="infoDelete.php?id=<?= $value["id"] ?>" class="btn btn-danger" onclick="javascript:return del();">刪除</a>
+            </div>
             <div class="col-lg-9 article p-3">
 
                 <table class="table table-bordered">
-                    <?php if ($infoCount > 0):
-                    foreach ($row as $key => $value): ?>
-                    <tr>
-                        <th>id</th>
-                        <td><?=$value["id"]?></td>
-                    </tr>
-                    <tr>
-                        <th>類別</th>
-                        <td><?=$value["category"]?></td>
-                    </tr>
-                    <tr>
-                        <th>建立時間</th>
-                        <td><?=$value["time"]?></td>
-                    </tr>
-                    <tr>
-                        <th>標題</th>
-                        <td><?=$value["title"]?></td>
-                    </tr>
-                    <tr>
-                        <th>內容</th>
-<!--                        word-wrap:break-word-->
-                        <td><pre style="max-width: 960px"><?=$value["content"]?></pre></td>
-                    </tr>
-                    <tr>
-                        <th>圖片</th>
-                        <td><?=$value["img"]?></td>
-                    </tr>
-                    <tr>
-                        <th>影片</th>
-                        <td><?=$value["film"]?></td>
-                    </tr>
-                    <?php endforeach; else: ?>
-                    <tr>
-                        <td>沒有資料</td>
-                    </tr>
+                            <tr>
+                                <th>id</th>
+                                <td><?=$value["id"]?></td>
+                            </tr>
+                            <tr>
+                                <th>類別</th>
+                                <td><?=$value["category"]?></td>
+                            </tr>
+                            <tr>
+                                <th>建立時間</th>
+                                <td><?=$value["time"]?></td>
+                            </tr>
+                            <tr>
+                                <th>標題</th>
+                                <td><?=$value["title"]?></td>
+                            </tr>
+                            <tr>
+                                <th>內容</th>
+                                <!--                        word-wrap:break-word-->
+                                <td><pre style="max-width: 960px"><?=$value["content"]?></pre></td>
+                            </tr>
+                            <tr>
+                                <th>圖片</th>
+                                <td name="photo"><?=$value["img"]?></td>
+                            </tr>
+                            <tr>
+                                <th>影片</th>
+                                <td><?=$value["film"]?></td>
+                            </tr>
+                        <?php endforeach; else: ?>
+                        <tr>
+                            <td>沒有資料</td>
+                        </tr>
                     <?php endif; ?>
                 </table>
             </div>
@@ -98,6 +98,16 @@ try {
             return true;
         } else {
             return false;
+        }
+    }
+
+    var avatar = document.getElementsByName("photo")[0]
+    var previewAvatar = document.getElementById("preview-photo")
+    avatar.onchange = () => {
+        var file = avatar.files[0]
+        if (file) {
+            previewAvatar.src = URL.createObjectURL(file)
+            previewAvatar.classList.remove('d-none')
         }
     }
 </script>

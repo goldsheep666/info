@@ -26,15 +26,19 @@
         <form action="infoInsert.php" method="post">
             <div class="col-lg-9 button-group d-flex align-items-center shadow-sm px-3">
 
-                <a class="btn btn-primary" href="info-list.php">返回</a>
-                <button class="btn btn-primary m-4" type="submit">儲存</button>
-                <button class="btn btn-primary ">預覽</button>
-                <button class="btn btn-danger m-4">刪除</button>
+                <a class="btn btn-primary me-4" href="info-list.php">返回</a>
+                <button class="btn btn-primary me-4" type="submit">儲存</button>
+                <a href="info-list.php" class="btn btn-danger">刪除</a>
             </div>
-            <div class="col-lg-9  article py-3">
+            <div class="col-lg-9  article p-3">
+                <label for="photo" class="form-label">圖片</label>
                 <div class="d-flex align-items-center  justify-content-center">
+
                     <input type="file" class="form-control form-control-sm" id="inputGroupFile" name="file">
-                    <button class="btn btn-primary m-2" type="submit">上傳</button>
+                    <button class="btn btn-primary m-2" type="submit" id="photo" name="photo">上傳</button>
+                    <div>
+                        <img id="preview-photo" class="photo-img cover-fit d-none" src="">
+                    </div>
                 </div>
             </div>
             <div class="col-lg-9 article p-3">
@@ -54,7 +58,16 @@
 
     </div>
 </div>
-
-
+<script>
+    var avatar = document.getElementsByName("photo")[0]
+    var previewAvatar = document.getElementById("preview-photo")
+    avatar.onchange = () => {
+        var file = avatar.files[0]
+        if (file) {
+            previewAvatar.src = URL.createObjectURL(file)
+            previewAvatar.classList.remove('d-none')
+        }
+    }
+</script>
 </body>
 </html>

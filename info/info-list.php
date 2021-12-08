@@ -46,7 +46,7 @@ if (isset($_GET["find"])) {
     } else {
         $page = $count / $perPageCount;
     }
-    $sql = "SELECT * FROM information WHERE valid=1 ORDER BY id LIMIT $startRow, $perPageCount";
+    $sql = "SELECT * FROM information WHERE valid=1 ORDER BY time DESC LIMIT $startRow, $perPageCount";
     $stmt = $db_host->prepare($sql);
     try {
         $stmt->execute();
