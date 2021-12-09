@@ -33,24 +33,24 @@
             <div class="col-lg-9  article p-3">
                 <label for="photo" class="form-label">圖片</label>
                 <div class="d-flex align-items-center  justify-content-center">
-
-                    <input type="file" class="form-control form-control-sm" id="inputGroupFile" name="file">
-                    <button class="btn btn-primary m-2" type="submit" id="photo" name="photo">上傳</button>
-                    <div>
-                        <img id="preview-photo" class="photo-img cover-fit d-none" src="">
-                    </div>
+                    <input type="file" class="form-control form-control-sm" name="photo"id="photo">
+                    <button class="btn btn-primary m-2"  name="info_photo">上傳</button>
                 </div>
+                    <div>
+                       hiiiii <img id="preview-photo" class="photo-img cover-fit d-none" src=" ">
+                    </div>
+
             </div>
+
             <div class="col-lg-9 article p-3">
                 <label>類型
                     <input type="text" style="margin-top: 0.5rem" class="form-control mb-3" name="category">
                 </label>
                 <br>
                 <label class="form-label">標題</label>
-                <input type="text" class="form-control mb-3" name="title" name="title">
+                <input type="text" class="form-control mb-3" name="title">
                 <label for="exampleFormControlTextarea1" class="form-label">內容</label>
                 <textarea class="form-control" name="content" rows="20"></textarea>
-
             </div>
 
         </form>
@@ -59,8 +59,8 @@
     </div>
 </div>
 <script>
-    var avatar = document.getElementsByName("photo")[0]
-    var previewAvatar = document.getElementById("preview-photo")
+    var avatar = document.getElementsById("photo")[0]
+    var previewAvatar = document.getElementBy("preview-photo")
     avatar.onchange = () => {
         var file = avatar.files[0]
         if (file) {

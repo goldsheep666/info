@@ -14,7 +14,7 @@ try {
 //搜尋
 if (isset($_GET["find"])) {
     $find = $_GET["find"];
-    $sql = "SELECT * FROM information WHERE content LIKE ? AND valid=1 ORDER BY id ";
+    $sql = "SELECT * FROM information WHERE content LIKE ? AND valid=1 ORDER BY time DESC";
     $stmt = $db_host->prepare($sql);
     try {
         $stmt->execute(["%$find%"]);
@@ -102,8 +102,10 @@ if (isset($_GET["find"])) {
             </div>
             <div class="d-flex align-items-center">
                <form action="info-list.php" method="get" class="d-flex">
-<!--                    <input type="hidden" name="p" value="--><?//=$pageNum?><!--">-->
-                    <input type="search" class="form-control form-control-sm me-4" name="find"
+<!--                   <input type="search" class="form-control form-control-sm me-2" name="find_category"-->
+<!--                   value="--><?php //if (isset($find_category)) echo $find_category; ?><!--" placeholder="類別搜尋">-->
+<!--                   <button class="btn btn-primary text-nowrap me-4" type="submit">搜尋</button>-->
+                    <input type="search" class="form-control form-control-sm me-2" name="find"
                            value="<?php if (isset($find)) echo $find; ?>" placeholder="內容搜尋">
                     <button class="btn btn-primary text-nowrap" type="submit">搜尋</button>
                 </form>

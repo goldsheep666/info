@@ -25,6 +25,12 @@ try {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <?php require_once("../public/css.php") ?>
+    <style>
+        pre{
+            white-space: pre-wrap;
+            word-wrap:break-word;
+        }
+    </style>
 </head>
 <body>
 <div class="container-fluid">
@@ -63,17 +69,21 @@ try {
                             </tr>
                             <tr>
                                 <th>內容</th>
-                                <!--                        word-wrap:break-word-->
                                 <td><pre style="max-width: 960px"><?=$value["content"]?></pre></td>
                             </tr>
                             <tr>
                                 <th>圖片</th>
-                                <td name="photo"><?=$value["img"]?></td>
+                                <?php if($value["photo"]!=null):
+                                ?>
+                                <td>
+                                    <img src="../images/<?=$value["photo"]?>" style="max-width:930px ">
+                                </td>
+                                <?php else: ?>
+                                <td>
+                                </td>
+                                <?php endif;?>
                             </tr>
-                            <tr>
-                                <th>影片</th>
-                                <td><?=$value["film"]?></td>
-                            </tr>
+
                         <?php endforeach; else: ?>
                         <tr>
                             <td>沒有資料</td>
@@ -81,12 +91,6 @@ try {
                     <?php endif; ?>
                 </table>
             </div>
-
-
-
-
-
-
         </form>
     </div>
 </div>
@@ -98,16 +102,6 @@ try {
             return true;
         } else {
             return false;
-        }
-    }
-
-    var avatar = document.getElementsByName("photo")[0]
-    var previewAvatar = document.getElementById("preview-photo")
-    avatar.onchange = () => {
-        var file = avatar.files[0]
-        if (file) {
-            previewAvatar.src = URL.createObjectURL(file)
-            previewAvatar.classList.remove('d-none')
         }
     }
 </script>

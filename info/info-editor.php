@@ -51,15 +51,14 @@ try {
             <form action="infoUpdate.php" method="post">
                 <div class="col-lg-9 button-group d-flex align-items-center shadow-sm px-3">
 
-                    <a class="btn btn-primary" href="info-list.php">返回</a>
-                    <button class="btn btn-primary m-4" type="submit">儲存</button>
-
+                    <a class="btn btn-primary me-4" href="info-list.php">返回</a>
+                    <button class="btn btn-primary me-4" type="submit">儲存</button>
+                    <a class="btn btn-primary me-4" href="info-read.php?id=<?= $value["id"] ?>">檢視</a>
                     <a href="infoDelete.php?id=<?= $value["id"] ?>" class="btn btn-danger" onclick="javascript:return del();">刪除</a>
                 </div>
                 <div class="col-lg-9  article py-3">
                     <div class="d-flex align-items-center  justify-content-center">
-                        <input type="file" class="form-control form-control-sm" >
-                                            <button class="btn btn-primary m-2" type="submit">上傳</button>
+                        <input type="file" class="form-control form-control-sm" name="photo">
                     </div>
                 </div>
                 <div class="col-lg-9 article p-3">
@@ -71,7 +70,7 @@ try {
                     <label class="form-label">標題</label>
                     <input type="text" class="form-control mb-3"name="title" value="<?= $value["title"] ?>">
 
-<div class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-between">
                     <label class="form-label">內容</label>
                     <div class="d-flex align-items-center">
                         <a role="button" class="badge bg-warning jq-large text-dark me-2"style="text-decoration:none">大</a>
@@ -97,6 +96,7 @@ try {
             return false;
         }
     }
+
     //文字大小更改
     $(".jq-large").on("click", function (e) {
         event.preventDefault(); //取消預設行為
