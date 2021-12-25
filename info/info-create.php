@@ -16,6 +16,7 @@
 
 </head>
 <body>
+<p>分支分支分支</p>
 <div class="container-fluid">
     <div class="row wrap d-flex ">
         <?php require_once("../public/header.php") ?>
@@ -37,7 +38,7 @@
                     <button class="btn btn-primary m-2"  name="info_photo">上傳</button>
                 </div>
                     <div>
-                       hiiiii <img id="preview-photo" class="photo-img cover-fit d-none" src=" ">
+                       <img id="preview-photo" class="photo-img cover-fit d-none" src=" ">
                     </div>
 
             </div>
